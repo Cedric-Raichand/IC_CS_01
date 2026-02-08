@@ -1,14 +1,19 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Web Vulnerability Scanner</title>
+    <title>Website Scanner</title>
 </head>
 <body>
-<h2>Enter Website URL</h2>
-<form action="/scan" method="POST">
-    <input name="url" placeholder="https://example.com" required type="text">
+<h1>Website Scanner</h1>
+<form method="POST">
+    <input name="url" placeholder="Enter website URL" type="text">
     <button type="submit">Scan Website</button>
 </form>
+
+{% if result %}
+<h2>Result:</h2>
+<pre>{{ result }}</pre>
+{% endif %}
 </body>
 </html>
