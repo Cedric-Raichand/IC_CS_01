@@ -2,14 +2,36 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def check_security_headers(headers):
+    security_headers = {
+        "Content-Security-Policy": "Missing CSP protection (XSS risk)",
+        "Strict-Transport-Security": "Missing HSTS (HTTPS downgrade risk)",
+        "X-Frame-Options": "Missing Clickjacking protection",
+        "X-Content-Type-Options": "Missing MIME sniffing protection",
+        "Referrer-Policy": "Missing Referrer Policy"
+    }
+
+    results = {}
+
+    for header, message in security_headers.items():
+        if header in headers:
+            results[header] = "Present"
+        else:
+            results[header] = message
+
+    return results
+
+
 def fetch_website(url):
     if not url.startswith("http"):
-        url = "http://" + url  # try http first
-
+        url = "http://" + url  # use http for vuln test sites
 
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(url, headers=headers, timeout=5)
+
+        # Check security headers
+        header_results = check_security_headers(response.headers)
 
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -34,7 +56,8 @@ def fetch_website(url):
 
         return {
             "url": url,
-            "links": links[:10],  # limit so page not too long
+            "security_headers": header_results,
+            "links": links[:10],
             "forms": forms
         }
 
