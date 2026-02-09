@@ -1,19 +1,54 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+
 <head>
-    <title>Website Scanner</title>
+    <title>Web Security Scanner</title>
 </head>
 <body>
-<h1>Website Scanner</h1>
+
+<h1>Website Security Scanner</h1>
+
 <form method="POST">
-    <input name="url" placeholder="Enter website URL" type="text">
+    <input name="url" placeholder="Enter website (example.com)" type="text">
     <button type="submit">Scan Website</button>
 </form>
 
+<hr>
+
 {% if result %}
-<h2>Result:</h2>
-<pre>{{ result }}</pre>
+
+{% if result.error %}
+<h3 style="color:red;">Error: {{ result.error }}</h3>
+
+{% else %}
+
+<h2>Scan Result for {{ result.url }}</h2>
+
+<h3>Links Found:</h3>
+<ul>
+    {% for link in result.links %}
+    <li>{{ link }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Forms Found:</h3>
+<ul>
+    {% for form in result.forms %}
+    <li>
+        Method: {{ form.method }} | Action: {{ form.action }}
+        <ul>
+            {% for input in form.inputs %}
+            <li>{{ input.type }} : {{ input.name }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
 {% endif %}
+
+{% endif %}
+
 </body>
 </html>
