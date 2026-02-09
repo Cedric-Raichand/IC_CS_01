@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
     <title>Web Security Scanner</title>
 </head>
@@ -24,6 +22,13 @@
 {% else %}
 
 <h2>Scan Result for {{ result.url }}</h2>
+
+<h3>Security Headers:</h3>
+<ul>
+    {% for header, status in result.security_headers.items() %}
+    <li><strong>{{ header }}</strong> : {{ status }}</li>
+    {% endfor %}
+</ul>
 
 <h3>Links Found:</h3>
 <ul>
