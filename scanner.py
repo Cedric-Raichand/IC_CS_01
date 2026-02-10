@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+from sql_scanner import scan_sql_injection
+
 
 
 def check_security_headers(headers):
@@ -54,12 +56,16 @@ def fetch_website(url):
             form_details["inputs"] = inputs
             forms.append(form_details)
 
+        sql_results = scan_sql_injection(url, forms)
+
         return {
             "url": url,
             "security_headers": header_results,
             "links": links[:10],
-            "forms": forms
+            "forms": forms,
+            "sql_vulnerabilities": sql_results
         }
+
 
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
