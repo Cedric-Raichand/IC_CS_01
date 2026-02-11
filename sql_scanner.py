@@ -1,6 +1,11 @@
 import requests
 from urllib.parse import urljoin
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "text/html,application/xhtml+xml"
+}
+
 SQL_PAYLOADS = [
     "' OR '1'='1",
     "' OR 1=1--",
@@ -45,9 +50,9 @@ def scan_sql_injection(url, forms):
 
             try:
                 if method == "post":
-                    res = requests.post(target_url, data=data, timeout=5)
+                    res = requests.post(target_url, data=data, headers=HEADERS, timeout=5)
                 else:
-                    res = requests.get(target_url, params=data, timeout=5)
+                    res = requests.get(target_url, params=data, headers=HEADERS, timeout=5)
 
                 if is_vulnerable(res.text):
                     vulnerable_forms.append({
