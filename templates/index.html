@@ -51,10 +51,6 @@
     {% endfor %}
 </ul>
 
-{% endif %}
-
-{% endif %}
-
 <h3>SQL Injection Test:</h3>
 {% if result.sql_vulnerabilities %}
 <ul>
@@ -69,6 +65,22 @@
 <p style="color:green;">No SQL Injection vulnerability detected</p>
 {% endif %}
 
+<h3>XSS Test:</h3>
+{% if result.xss_vulnerabilities %}
+<ul>
+    {% for vuln in result.xss_vulnerabilities %}
+    <li style="color:red;">
+        Vulnerable Form → Action: {{ vuln.action }} | Method: {{ vuln.method }}
+        | Payload: {{ vuln.payload }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p style="color:green;">No XSS vulnerability detected</p>
+{% endif %}
+
+{% endif %}
+{% endif %}
 
 </body>
 </html>
