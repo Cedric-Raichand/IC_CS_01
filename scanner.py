@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from sql_scanner import scan_sql_injection
-
+from xss_scanner import scan_xss
 
 
 def check_security_headers(headers):
@@ -26,21 +26,29 @@ def check_security_headers(headers):
 
 def fetch_website(url):
     if not url.startswith("http"):
-        url = "http://" + url  # use http for vuln test sites
+        url = "http://" + url
 
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.get(url, headers=headers, timeout=5)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Connection": "keep-alive"
+        }
 
-        # Check security headers
+        response = requests.get(url, headers=headers, timeout=8)
+
+        # Security header analysis
         header_results = check_security_headers(response.headers)
 
         soup = BeautifulSoup(response.text, "html.parser")
 
+        # Extract links
         links = []
         for link in soup.find_all("a", href=True):
             links.append(link["href"])
 
+        # Extract forms
         forms = []
         for form in soup.find_all("form"):
             form_details = {}
@@ -57,15 +65,16 @@ def fetch_website(url):
             forms.append(form_details)
 
         sql_results = scan_sql_injection(url, forms)
+        xss_results = scan_xss(url, forms)
 
         return {
             "url": url,
             "security_headers": header_results,
             "links": links[:10],
             "forms": forms,
-            "sql_vulnerabilities": sql_results
+            "sql_vulnerabilities": sql_results,
+            "xss_vulnerabilities": xss_results
         }
-
 
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
