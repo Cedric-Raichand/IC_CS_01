@@ -21,6 +21,19 @@
 
 {% else %}
 
+<!-- ===== SCAN SUMMARY ===== -->
+{% if report %}
+<h2>Scan Summary</h2>
+<ul>
+    <li><strong>Target:</strong> {{ report.target }}</li>
+    <li><strong>SQL Injection:</strong> {{ report.sql_injection }}</li>
+    <li><strong>XSS:</strong> {{ report.xss }}</li>
+    <li><strong>Missing Security Headers:</strong> {{ report.missing_headers }}</li>
+    <li><strong>Overall Risk:</strong> <span style="color:red">{{ report.risk }}</span></li>
+</ul>
+<hr>
+{% endif %}
+
 <h2>Scan Result for {{ result.url }}</h2>
 
 <h3>Security Headers:</h3>
