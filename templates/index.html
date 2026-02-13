@@ -3,7 +3,14 @@
 <head>
     <title>Web Security Scanner</title>
 </head>
+
 <body>
+
+<!-- PROJECT HEADER -->
+<div style="background:#222;color:white;padding:15px;text-align:center;">
+    <h2> Web Application Vulnerability Scanner</h2>
+    <p>Interncred Cybersecurity Internship - Task 1</p>
+</div>
 
 <h1>Website Security Scanner</h1>
 
@@ -14,25 +21,29 @@
 
 <hr>
 
+{% if report %}
+
+<!-- SCAN SUMMARY -->
+<h2>Scan Summary</h2>
+<ul>
+    <li><strong>Target:</strong> {{ report.target }}</li>
+    <li><strong>Scan Time:</strong> {{ timestamp }}</li>
+    <li><strong>SQL Injection:</strong> {{ report.sql_injection }}</li>
+    <li><strong>XSS:</strong> {{ report.xss }}</li>
+    <li><strong>Missing Security Headers:</strong> {{ report.missing_headers }}</li>
+    <li><strong>Overall Risk:</strong> <span style="color:red">{{ report.risk }}</span></li>
+</ul>
+
+<hr>
+{% endif %}
+
+
 {% if result %}
 
 {% if result.error %}
 <h3 style="color:red;">Error: {{ result.error }}</h3>
 
 {% else %}
-
-<!-- ===== SCAN SUMMARY ===== -->
-{% if report %}
-<h2>Scan Summary</h2>
-<ul>
-    <li><strong>Target:</strong> {{ report.target }}</li>
-    <li><strong>SQL Injection:</strong> {{ report.sql_injection }}</li>
-    <li><strong>XSS:</strong> {{ report.xss }}</li>
-    <li><strong>Missing Security Headers:</strong> {{ report.missing_headers }}</li>
-    <li><strong>Overall Risk:</strong> <span style="color:red">{{ report.risk }}</span></li>
-</ul>
-<hr>
-{% endif %}
 
 <h2>Scan Result for {{ result.url }}</h2>
 
@@ -65,35 +76,36 @@
 </ul>
 
 <h3>SQL Injection Test:</h3>
-{% if result.sql_vulnerabilities %}
 <ul>
-    {% for vuln in result.sql_vulnerabilities %}
-    <li style="color:red;">
-        Vulnerable Form → Action: {{ vuln.action }} | Method: {{ vuln.method }}
-        | Payload: {{ vuln.payload }}
-    </li>
+    {% if result.sql_vulnerabilities %}
+    {% for v in result.sql_vulnerabilities %}
+    <li>Vulnerable Form → Action: {{ v.action }} | Method: {{ v.method }} | Payload: {{ v.payload }}</li>
     {% endfor %}
+    {% else %}
+    <li>No SQL Injection vulnerability detected</li>
+    {% endif %}
 </ul>
-{% else %}
-<p style="color:green;">No SQL Injection vulnerability detected</p>
-{% endif %}
 
 <h3>XSS Test:</h3>
-{% if result.xss_vulnerabilities %}
 <ul>
-    {% for vuln in result.xss_vulnerabilities %}
-    <li style="color:red;">
-        Vulnerable Form → Action: {{ vuln.action }} | Method: {{ vuln.method }}
-        | Payload: {{ vuln.payload }}
-    </li>
+    {% if result.xss_vulnerabilities %}
+    {% for v in result.xss_vulnerabilities %}
+    <li>Vulnerable Form → Action: {{ v.action }} | Method: {{ v.method }} | Payload: {{ v.payload }}</li>
     {% endfor %}
+    {% else %}
+    <li>No XSS vulnerability detected</li>
+    {% endif %}
 </ul>
-{% else %}
-<p style="color:green;">No XSS vulnerability detected</p>
-{% endif %}
 
 {% endif %}
 {% endif %}
+
+<!-- FOOTER -->
+<hr>
+<div style="text-align:center;margin-top:20px;color:gray;">
+    <p>Developed by: Cedrick Dzodzodzi</p>
+    <p>Interncred Cybersecurity Internship Program</p>
+</div>
 
 </body>
 </html>
