@@ -165,10 +165,9 @@ Unauthorized scanning may violate cybersecurity laws.
 ## Author
 
 **Cedrick Dzodzodzi**
-Interncred Cybersecurity Internship Program
-
+Interncred Cybersecurity Internship Program 
 ---
 
 ## License
 
-Educational Use Only
+Educational Use Only(Internship) 
